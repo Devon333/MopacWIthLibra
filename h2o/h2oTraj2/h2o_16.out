@@ -1,0 +1,281 @@
+ *******************************************************************************
+ ** Site#:    0         For non-commercial use only    Version 20.173L 64BITS **
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 20.173L, James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              INDO CALCULATION RESULTS
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Thu Jun  1 14:00:56 2023  *
+ *  INDO       - The INDO Hamiltonian to be used
+ *
+ *
+ *
+ *                 CHARGE ON SYSTEM = 0
+ *
+ *
+ *
+ *  C.I.=(N,M) - 2 DOUBLY FILLED LEVELS USED IN A C.I. INVOLVING 4 M.O.'S
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY 7200.0 SECONDS REQUESTED
+ *  RELSCF     - DEFAULT SCF CRITERION MULTIPLIED BY 0.0000
+ *              (DEFAULT SCF CRITERION = 0.00010)
+ *  ALLVEC     - PRINT ALL EIGENVECTORS
+ **********
+ *  WARNING: Specified print options may not behave as expected with INDO
+ **********
+ *******************************************************************************
+INDO C.I.=(4,2) AllVEC CHARGE=0 RELSCF=0.000001
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+ 
+     1       O         -1.05159177  *   0.46762623  *   0.01083940  *
+     2       H         -0.06238579  *   0.39558430  *  -0.08749944  *
+     3       H         -1.32831769  *   1.39772530  *  -0.08455445  *
+ 
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM           X           Y           Z
+
+     1         O         -1.0516      0.4676      0.0108
+     2         H         -0.0624      0.3956     -0.0875
+     3         H         -1.3283      1.3977     -0.0846
+
+           Empirical Formula: H2 O  =     3 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C2v 
+
+
+      RHF CALCULATION, NO. OF DOUBLY OCCUPIED LEVELS = 4
+
+ WARNING: INDO only performs single-point calculations
+  SCF CRITERION =    0.1000E-09
+
+ Summary of symmetry occupancy in each shell:
+
+ SHELL     
+    1    4
+    v    2
+ TOTAL   6
+
+
+
+
+    ROOT NO.    1           2           3           4           5           6
+
+           -40.11663   -19.89531   -14.43424   -12.76578     5.67681     7.83391
+  
+  
+  S  O   1   0.84109     0.00821    -0.37698     0.00000    -0.38644    -0.03252
+ PX  O   1   0.09704     0.60180     0.53182     0.10764    -0.33447     0.47132
+ PY  O   1   0.12903    -0.48601     0.66074     0.13307    -0.33853    -0.42220
+ PZ  O   1  -0.02803    -0.00010    -0.14735     0.98524     0.08226     0.00553
+  
+  S  H   2   0.35888     0.45137     0.24447    -0.00000     0.59462    -0.50411
+  
+  S  H   3   0.37004    -0.44478     0.23874    -0.00000     0.51366     0.58686
+
+
+ Reference determinate nber   1 is ALPHA 1 -   4
+ SINGLE excitations FROM orbs   3 to   4 INTO orbs   5 to   6
+ 
+
+ CI excitations=    5:        =  5
+ The lowest    5 spin-adapted configurations of multiplicity=  1
+     sym   eV   cm**-1 -dets- dipole oscilator X FRAG ....Excitations named from first reference determinate
+                       tot  #  Debye  strength
+ 
+   1      0.000      0.  1  1  2.3788 0.000000 0  0 (     )->       )
+   2     10.571  85257.  1  1  0.4432 0.031135 1  1 (   4 )->   5   )
+   3     11.818  95315.  1  1  0.8479 0.000246 1  1 (   4 )->   6   )
+   4     13.060 105336.  1  1  0.7556 0.024921 1  1 (   3 )->   5   )
+   5     14.321 115506.  1  1  0.4092 0.214288 1  1 (   3 )->   6   )
+
+ Depression of ground-state after CI=          0. cm**-1 Energy=  -463.2733308 eV
+ Dipole moment=  1.470483  1.824970 -0.407142 tot=  2.378781 Debyes
+
+
+  CI trans.  energy frequency wavelength oscillator ---------polarization---------    dipole   ------components----- 
+ st.  symm.    eV      cm-1       nm      strength       x          y         z       moment     x       y       z 
+
+   2     10.5680128    85237.    117.32  0.030831   0.107636   0.133074   0.985244  0.682076  -0.462   0.502  -0.017
+   3     11.8200962    95336.    104.89  0.000578   0.107635   0.133076   0.985244  0.980689   0.956   0.175  -0.128
+   4     13.0588667   105327.     94.94  0.026069  -0.840261  -0.517509   0.161696  0.851133  -0.835  -0.122   0.108
+   5     14.3219207   115514.     86.57  0.213043  -0.766942   0.641710  -0.002887  0.566816   0.453  -0.340  -0.004
+ 
+ Polarizability (au  ) xx=    1.60 xy=   -0.98 yy=    1.05 xz=    0.02 yz=    0.05 zz=    0.61
+ Polarizability (A**3) xx=    0.24 xy=   -0.15 yy=    0.16 xz=    0.00 yz=    0.01 zz=    0.09
+ ***********************************
+ ***********************************
+ CI Matrix
+  1.0000000000  0.0000000000  0.0000000000  0.0000000000  0.0000000000 
+  0.0000000000 -0.9989944294  0.0448344727 -0.0000000728 -0.0000000017 
+  0.0000000000 -0.0448344727 -0.9989944294 -0.0000000720 -0.0000000768 
+  0.0000000000  0.0000000757  0.0000000664 -0.9995753053  0.0291411917 
+  0.0000000000 -0.0000000074 -0.0000000786  0.0291411917  0.9995753053 
+ ***********************************
+ ***********************************
+ 
+ 
+ Major CI contributions to CI states
+ 
+State    1  0.0000     CI coeff  CI percent
+    Config       1   1.00000000  1.00000000
+ Total coeff printed             1.00000000
+  
+State    2 10.5680     CI coeff  CI percent
+    Config       2  -0.99899443  0.99798987
+    Config       3   0.04483447  0.00201013
+ Total coeff printed             1.00000000
+  
+State    3 11.8201     CI coeff  CI percent
+    Config       2  -0.04483447  0.00201013
+    Config       3  -0.99899443  0.99798987
+ Total coeff printed             1.00000000
+  
+State    4 13.0589     CI coeff  CI percent
+    Config       4  -0.99957531  0.99915079
+ Total coeff printed             0.99915079
+  
+State    5 14.3219     CI coeff  CI percent
+    Config       5   0.99957531  0.99915079
+ Total coeff printed             0.99915079
+  
+
+ -------------------------------------------------------------------------------
+ INDO C.I.=(4,2) AllVEC CHARGE=0 RELSCF=0.000001
+
+
+
+
+     1SCF WAS SPECIFIED, SO BFGS WAS NOT USED                 
+     SCF FIELD WAS ACHIEVED                                   
+
+
+                              INDO CALCULATION
+                                                       MOPAC2016 (Version: 20.173L)
+                                                       Thu Jun  1 14:00:56 2023
+
+
+
+
+          FINAL HEAT OF FORMATION =      -8326.26075 KCAL/MOL =  -34837.07498 KJ/MOL
+
+
+          TOTAL ENERGY            =       -368.16258 EV
+          ELECTRONIC ENERGY       =       -463.27333 EV  POINT GROUP:     C2v 
+          CORE-CORE REPULSION     =         95.11075 EV
+          COSMO AREA              =         42.91 SQUARE ANGSTROMS
+          COSMO VOLUME            =         25.50 CUBIC ANGSTROMS
+
+          IONIZATION POTENTIAL    =         12.765778 EV
+          HOMO LUMO ENERGIES (EV) =        -12.766  5.677
+          NO. OF FILLED LEVELS    =          4
+          MOLECULAR WEIGHT        =         18.0152
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            H     3    H     2     1.61458
+            H     2    O     1     0.56585
+            O     1    H     2     0.00000
+
+
+          SCF CALCULATIONS        =          1
+ 
+          WALL-CLOCK TIME         =          0.086 SECONDS
+          COMPUTATION TIME        =          0.010 SECONDS
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+ 
+     1       O         -1.05159177  *   0.46762623  *   0.01083940  *
+     2       H         -0.06238579  *   0.39558430  *  -0.08749944  *
+     3       H         -1.32831769  *   1.39772530  *  -0.08455445  *
+
+                             CARTESIAN COORDINATES
+
+   1    O       -1.051591774     0.467626230     0.010839395
+   2    H       -0.062385795     0.395584297    -0.087499442
+   3    H       -1.328317690     1.397725300    -0.084554453
+
+
+           Empirical Formula: H2 O  =     3 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C2v 
+
+
+                EIGENVECTORS  
+
+
+   Root No.       1         2         3         4         5         6
+
+                 1 a1      1 b2      2 a1      1 b1      3 a1      2 b2  
+
+               -40.117   -19.895   -14.434   -12.766     5.677     7.834
+  
+  S   O    1    0.8411    0.0082   -0.3770    0.0000   -0.3864   -0.0325
+  Px  O    1    0.0970    0.6018    0.5318    0.1076   -0.3345    0.4713
+  Py  O    1    0.1290   -0.4860    0.6607    0.1331   -0.3385   -0.4222
+  Pz  O    1   -0.0280   -0.0001   -0.1473    0.9852    0.0823    0.0055
+  S   H    2    0.3589    0.4514    0.2445   -0.0000    0.5946   -0.5041
+  S   H    3    0.3700   -0.4448    0.2387   -0.0000    0.5137    0.5869
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       
+    1          O          -0.431900        6.4319     1.69921     4.73269
+    2          H           0.215401        0.7846     0.78460
+    3          H           0.216499        0.7835     0.78350
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.     0.736     0.893    -0.201     1.174
+ HYBRID         0.735     0.932    -0.206     1.205
+ SUM            1.471     1.825    -0.407     2.379
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+     Atom    s        px        py        pz   
+    1  O   1.69921   1.33199   1.41430   1.98640
+    2  H   0.78460
+    3  H   0.78350
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.18 SECONDS
+
+ == MOPAC DONE ==
+
+
+          MOPAC Job: "./h2oTraj/h2o_16.mop" ended normally on Jun  1, 2023, at 14:00.
+
+rm: cannot remove ‘./h2oTraj/h2o_16.cim’: No such file or directory
+rm: cannot remove ‘./h2oTraj/h2o_16.end’: No such file or directory
+rm: cannot remove ‘./h2oTraj/h2o_16.log’: No such file or directory
+rm: cannot remove ‘./h2oTraj/h2o_16.temp’: No such file or directory
+rm: cannot remove ‘./h2oTraj/h2o_16.ple’: No such file or directory
+rm: cannot remove ‘./h2oTraj/h2o_16.sts’: No such file or directory
