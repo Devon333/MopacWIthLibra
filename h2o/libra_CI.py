@@ -48,10 +48,12 @@ colors.update({"41": "#2F4F4F"})  # darkslategray
 
 clrs_index = ["11", "21", "31", "41", "12", "22", "32", "13","23", "14", "24"]
 
-
+# setting number of files used to calculate NACs
 start = 0
 final = 98
+# setting time step
 dt = 1*units.fs2au
+# setting up params dict that is use by libra functions to read matrices
 params = {}
 if os.path.exists('*.png'):
   os.remove('*.png')
@@ -73,8 +75,12 @@ params["number_of_states"]    = 3
 
 
 #sd_basis =read_mopac_num_of_SD_states(params)
+
+
+# reading basis from mopac output file
 sd_basis=read_mopac_SD_config(params)
 
+# reading matrices from h2oTraj2/
 params.update( {  "data_dim":4, "isnap":start,"fsnap":final,"active_space":range(0,4),"get_imag":0,"get_real":1,
                   "data_re_prefix": "h2oTraj2/h2o_S_", "data_re_suffix": "_re.txt",
                   "data_im_prefix": "h2oTraj2/h2o_S_", "data_im_suffix": "_im.txt"
@@ -112,6 +118,7 @@ basis= reindex_basis(raw_basis)
 
 
 
+#function that calculates overlap between Slater determinants using libra functions
 def SD_ovlp(basis, time_ov_mat):
   N, M = len(basis), len(basis)
   res = CMATRIX(N,M)
@@ -122,6 +129,7 @@ def SD_ovlp(basis, time_ov_mat):
          #print(test) 
   return res
 
+#function that populates matrices with Slater determinant energies using libra functions
 def SD_energy(basis,E_mat):
   N, M = len(basis), len(basis)
   res = CMATRIX(N,M)
@@ -132,6 +140,7 @@ def SD_energy(basis,E_mat):
   #res.show_matrix() 
   return res
 
+#function that populates matrix with CI energies energy usig libra functions
 def CI_energy(basis,E_mat):
   N, M = len(basis), len(basis)
   res = CMATRIX(N,M)
@@ -148,11 +157,12 @@ Stsd=[]
 Ssd=[]
 Sci=[]
 Stci=[]
-#applying phase corrections
+
+#applying phase corrections to Kohn-Sham orbitals using libra functions
 step3.apply_orthonormalization_general(S, tim_ov)
 step3.apply_phase_correction_general(tim_ov)
 
-#building list of overlap and time overlap matrices
+#building lists of overlap and time overlap matrices using function built above
 for time in range(final-start):
     Stsd.append(SD_ovlp(basis, tim_ov[time]))
     Ssd.append(SD_ovlp(basis, S[time]))
@@ -160,13 +170,17 @@ for time in range(final-start):
 print("this is Stsd ", Stsd[0].show_matrix() )    
 print("this is Ssd ", Ssd[0].show_matrix() )    
 
+
+
 T[0].show_matrix()
 SD2CI=[]
 T_co=[]
 CIs=len(basis)
 #print(f"length of CI basis {CIs}")
 #exit()
-# building Transformation/CI matrix
+
+
+# Building Transformation/CI matrix SD2CI
 for time in range(final-start):
     SD2CI.append(CMATRIX(CIs,CIs))
     for col in range(CIs):
@@ -174,6 +188,7 @@ for time in range(final-start):
             val= (T[time].get(row,col))#*(1.0+0.0j)
             SD2CI[time].set(row,col,val)
             print(f'this is a value put in the SD2CI matrix {val}')
+    # normalizing rows of Transformation matrix
     for row in range(CIs):
         norm=0.0
         for col in range(CIs):
@@ -197,9 +212,10 @@ step3.apply_orthonormalization_general( Sci, Stci )
 
 dt = 1*units.fs2au
 start_time = params["isnap"]
-res_dir="h2oTraj"
+res_dir="h2oTraj2"
 nsteps = final-start
 print("Outputting the CI data to the res directory..." )
+# Printing matrices in results directory
 for step in range(nsteps-1):
     Ssd[step].real().show_matrix("%s/S_sd_%d_re" % (res_dir, int(step)))
     Sci[step].real().show_matrix("%s/S_ci_%d_re" % (res_dir, int(step)))
@@ -211,10 +227,14 @@ for step in range(nsteps-1):
 Hvib,Hvibsd = [[]], [[]]
 ci_hvib = None
 sd_hvib = None
-for step in range( nsteps-1 ): 
+for step in range( nsteps-1 ):
+    #Calculating SD NACs
     sd_nacs = (  0.5j / dt ) * CMATRIX ( ( Stsd[step] - Stsd[step].H() ).real() )    
+    #Calculating CI NACs
     ci_nacs = (  0.5j / dt ) * CMATRIX ( ( Stci[step] - Stci[step].H() ).real() )    
+    #Creating CI Vibrational Hamiltonian
     ci_hvib = E[step] - ci_nacs
+    #Creating SD Vibrational Hamiltonian 
     sd_hvib = Esd[step] - sd_nacs
     Hvibsd[0].append( sd_hvib )
     Hvib[0].append( ci_hvib )
@@ -253,9 +273,10 @@ CI_energy = np.array( CI_energy  )
 SD_energy = np.array( SD_energy ) 
 md_time   = np.array( md_time )
 
-# Compute the time-averaged CI NACs and make a list of them
+# Functions to compute the time-averaged SD NACs and make a list of them
 sd_res = data_stat.cmat_stat2(Hvibsd[0],2)
 sd_tNACs = []
+# Functions to compute the time-averaged CI NACs and make a list of them
 ci_res = data_stat.cmat_stat2(Hvib[0],2)
 ci_tNACs = []
 
@@ -329,8 +350,8 @@ plt.title('INDO SD NACs', fontsize=25)
 ax = plt.subplot(111)
 ax.set_xticks(np.arange(len(orbitals)))
 ax.set_yticks(np.arange(len(orbitals)))
-ax.set_xticklabels(labels=state_label_x,fontsize=15)
-ax.set_yticklabels(labels=state_label_x,fontsize=15)
+ax.set_xticklabels(labels=orbitals,fontsize=15)
+ax.set_yticklabels(labels=orbitals,fontsize=15)
 plt.xticks(rotation=90)
 cb=ax.imshow(sd_tNACs,origin='lower', cmap='plasma', interpolation='nearest')
 plt.colorbar(cb,label="meV")
