@@ -2,7 +2,7 @@
 A place to keep and update code
 
 
-	\section{Non-adiabatic Molecular Dynamics for INDO}
+	## Non-adiabatic Molecular Dynamics for INDO
 	For this study we implemented the necessary post-processing methods to calculate non-adiabatic couplings in the molecular orbital, Slater determinant(SD), and configuration interaction(CI) bases.
 	We focus on doing non-adiabatic molecular dynamics(NA-MD) where the nuclei are treated classically and the adiabatic electronic states are parametrically dependent on the atomic coordinates which vary with time.
 	The adibatic electronic states or molecular orbitals are defined as a linear combination of atomic orbitals
