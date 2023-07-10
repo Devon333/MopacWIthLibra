@@ -64,13 +64,13 @@ params["data_dim"] = 6 # the number of rows/columsn in E_ks files
 params["active_space"] = range(0,6) # alpha channel only here 
 params["isnap"] = 0 # numbering of the first available file
 params["fsnap"] = final # number of the final step
-
-params["orbital_indices"]     = list( range(0,6) )    # orbital indices from waveplot
 params["logfile_directory"]   = "tetraceneTraj/"
-params["es_software"]         = "mopac"
-params["isUKS"]               = 0
-params["tolerance"]           = 0.0  # set this to 0.0 for cp2k
-params["number_of_states"]    = 3 
+
+#params["orbital_indices"]     = list( range(0,6) )    # orbital indices from waveplot
+#params["es_software"]         = "mopac"
+#params["isUKS"]               = 0
+#params["tolerance"]           = 0.0  # set this to 0.0 for cp2k
+#params["number_of_states"]    = 3 
 
 
 
@@ -118,12 +118,13 @@ basis= reindex_basis(raw_basis)
 
 #function that calculates overlap between Slater determinants using libra functions
 def SD_ovlp(basis, time_ov_mat):
-    """basis -> list[list]
+  """basis -> list[list]
      time_ov_mat -> list[CMATRIX]
      takes in list of SD basis lists (list with indexes of KS orbitals used to describe 
      a single SD) and computes overlaps between SD bases by pulling the appropriate indices
      from the time doverlap matrix (time_ov_mat)
-     returns a matrix with overlaps of SD overlaps """
+     returns a matrix with overlaps of SD overlaps
+  """
   N, M = len(basis), len(basis)
   res = CMATRIX(N,M)
   for i in range(len(basis)):
