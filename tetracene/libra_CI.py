@@ -74,13 +74,11 @@ params["number_of_states"]    = 3
 
 
 
-#sd_basis =read_mopac_num_of_SD_states(params)
-
 
 # reading basis from mopac output file
 sd_basis=read_mopac_SD_config(params)
 
-# reading matrices from h2oTraj/
+# reading matrices from tetraceneTraj/
 params.update( {  "data_dim":6, "isnap":start,"fsnap":final,"active_space":range(0,6),"get_imag":0,"get_real":1,
                   "data_re_prefix": "tetraceneTraj/tetracene_S_", "data_re_suffix": "_re.txt",
                   "data_im_prefix": "tetraceneTraj/tetracene_S_", "data_im_suffix": "_im.txt"
@@ -119,7 +117,13 @@ basis= reindex_basis(raw_basis)
 
 
 #function that calculates overlap between Slater determinants using libra functions
-def SD_ovlp(basis, time_ov_mat):#,phases):
+def SD_ovlp(basis, time_ov_mat):
+    """basis -> list[list]
+     time_ov_mat -> list[CMATRIX]
+     takes in list of SD basis lists (list with indexes of KS orbitals used to describe 
+     a single SD) and computes overlaps between SD bases by pulling the appropriate indices
+     from the time doverlap matrix (time_ov_mat)
+     returns a matrix with overlaps of SD overlaps """
   N, M = len(basis), len(basis)
   res = CMATRIX(N,M)
   for i in range(len(basis)):
@@ -130,29 +134,12 @@ def SD_ovlp(basis, time_ov_mat):#,phases):
          #print(test) 
   return res
 
-#function that populates matrices with Slater determinant energies using libra functions
-def SD_energy(basis,E_mat):
-  N, M = len(basis), len(basis)
-  res = CMATRIX(N,M)
-  for i in range(len(basis)):
-     test = mapping.energy_arb(basis[i],E_mat)
-     res.set(i,i,test)
-     #print(test)
-  #res.show_matrix() 
-  return res
-
-#function that populates matrix with CI energies energy usig libra functions
-def CI_energy(basis,E_mat):
-  N, M = len(basis), len(basis)
-  res = CMATRIX(N,M)
-  for i in range(len(basis)):
-     test = mapping.energy_arb(basis[i],E_mat)
-     res.set(i,i,test)
-     #print(test)
-  #res.show_matrix() 
-  return res
 
 def Mat_avg(cmatList):
+    """cmatList -> list[CMATRIX]
+    takes in a list of cmatrices and returns the average value of each matrix element 
+    over all of the in a numpy matrix
+    """
     cols = cmatList[0].num_of_cols
     matAvg = np.zeros((cols,cols))
     steps = len(cmatList)
@@ -190,7 +177,6 @@ sd_phases=step3.apply_phase_correction_general( Stsd )
 #print("the phases",sd_phases[0].get(1,0).real)
 
 
-T[0].show_matrix()
 SD2CI=[]
 SD2CI2=[]
 T_co=[]
@@ -203,7 +189,7 @@ for time in range(final-start):
     SD2CI.append(CMATRIX(CIs,CIs))
     for row in range(CIs):
         for col in range(CIs):
-            val= (T[time].get(row,col))#*(1.0+0.0j)
+            val= (T[time].get(row,col))
             print(f"val before phase corr {val}")
             val *= sd_phases[time].get(row,0).real
             SD2CI[time].set(row,col,val)
@@ -217,24 +203,14 @@ for time in range(final-start):
             norm += abs(SD2CI[time].get(row,col))**2
         norm = 1.0/math.sqrt(norm)
         SD2CI[time].scale(-1,row,norm*(1.0+0.0j))
-for time in range(final-start):
-    for row in range(CIs):
-      for col in range(CIs):
-          val = SD2CI[time].get(row,col)
-          SD2CI[time].set(row,col,val)
+
+#for time in range(final-start):
+#    for row in range(CIs):
+#      for col in range(CIs):
+#          val = SD2CI[time].get(row,col)
+#          SD2CI[time].set(row,col,val)
 
 
-for I in range(len(SD2CI)-1):
-  print(f'Stsd[{I}] {Stsd[I].real().show_matrix()}')
-  print(f'sd_phases[{I}]{sd_phases[I].real().show_matrix()}')
-  print(f'SD2CI[{I}].H() {SD2CI[I].H().real().show_matrix()}')
-  print(f'SD2CI[{I+1}] {SD2CI[I].real().show_matrix()}')
-  print(f'Stsd[{I+1}] {Stsd[I+1].real().show_matrix()}')
-  print(f'sd_phases[{I+1}]{sd_phases[I+1].real().show_matrix()}')
-#  print(f'SD2CI[{I+1}].H() {SD2CI[I+1].H().real().show_matrix()}')
-#  print(f'SD2CI[{I+2}] {SD2CI[I+2].real().show_matrix()}')
-
-#exit()
 #calculating CI overlap and time overlaps
 for time in range(len(Ssd)-1):
     Stci.append( SD2CI[time].H() * Stsd[time] * SD2CI[time+1])    
@@ -245,54 +221,6 @@ print(f'Stci[0] {Stci[0].real().show_matrix()}')
 for time in range(len(Ssd)):
     Sci.append( SD2CI[time].H() * Ssd[time] * SD2CI[time])    
 
-#step3.apply_orthonormalization_general( Sci, Stci )
-#ci_phases=step3.apply_phase_correction_general( Stci )
-#print("phase correction[0]",ci_phases[0].show_matrix())
-#print("phase correction[1]",ci_phases[1].show_matrix())
-
-##exit()
-## Building Transformation/CI matrix SD2CI
-#for time in range(len(Stci)):
-#    SD2CI2.append(CMATRIX(CIs,CIs))
-#    for row in range(CIs):
-#        for col in range(CIs):
-#            SD2CI2[time].set(row,col,0.0)
-#            if row == col:
-#                #val= (T[time].get(row,col))#*(1.0+0.0j)
-#                #print(f"val before phase corr {val}")
-#                val = ci_phases[time].get(row,0)
-#                SD2CI2[time].set(row,col,val)
-#                print(f'this is a value put in the SD2CI matrix {val}')
-#    
-#
-## normalizing rows of Transformation matrix
-#    for row in range(CIs):
-#        norm=0.0
-#        for col in range(CIs):
-#            norm += abs(SD2CI2[time].get(row,col))**2
-#        norm = 1.0/math.sqrt(norm)
-#        SD2CI2[time].scale(-1,row,norm*(1.0+0.0j))
-#for time in range(len(Stci)):
-#    for row in range(CIs):
-#      for col in range(CIs):
-#          val = SD2CI2[time].get(row,col)
-#          SD2CI2[time].set(row,col,val)
-#
-##calculating CI overlap and time overlaps
-#for time in range(len(Stci)-1):
-#    Stci2.append( SD2CI2[time] * Stci[time] )    
-#    #Stci2.append( SD2CI2[time].H() * Stci[time] * SD2CI2[time+1])    
-#print(f'Stci2[0] {Stci2[0].real().show_matrix()}')
-#
-#
-#for time in range(len(SD2CI2)):
-#    Sci2.append( SD2CI2[time].H() * Sci[time] * SD2CI2[time])    
-
-
-#step3.apply_orthonormalization_general( Sci2, Stci2 )
-#params.update({ "do_state_reordering":2, "state_reordering_alpha":10.0 })
-#step3.apply_state_reordering(Stci2,E,params)
-#step3.apply_phase_correction_general( Stci2 )
 
 
 dt = 1*units.fs2au
@@ -301,10 +229,6 @@ res_dir="tetraceneTraj"
 nsteps = final-start
 print("Outputting the CI data to the res directory..." )
 # Printing matrices in results directory
-for step in range(len(Stci2)):
-    Stci2[step].real().show_matrix("%s/St_ci2_%d_re" % (res_dir, int(step)))
-    Sci2[step].real().show_matrix("%s/S_ci2_%d_re" % (res_dir, int(step)))
-
 for step in range(nsteps-1):
     Sci[step].real().show_matrix("%s/S_ci_%d_re" % (res_dir, int(step)))
     Stci[step].real().show_matrix("%s/St_ci_%d_re" % (res_dir, int(step)))
@@ -313,40 +237,21 @@ for step in range(nsteps-1):
     Ssd[step].real().show_matrix("%s/S_sd_%d_re" % (res_dir, int(step)))
     Stsd[step].real().show_matrix("%s/St_sd_%d_re" % (res_dir, int(step)))
 
+
 # Make the Hvib in the many-body basis
 Hvib,Hvibsd,Hvibci2 = [], [], []
 ci_hvib = None
-sd_hvib = None
-ci2_hvib = None
-for step in range( len(Stci2) ):
-    #Calculating SD NACs
-    #ci_nacs = (  0.5j / dt ) * CMATRIX ( ( Stsd[step] - Stsd[step].H() ).real() )    
-    #Calculating CI NACs
-    ci2_nacs = (  0.5j / dt ) * CMATRIX ( ( Stci2[step] - Stci2[step].H() ).real() )    
-    #Creating CI Vibrational Hamiltonian
-    ci2_hvib = E[step] - ci2_nacs
-    #Creating SD Vibrational Hamiltonian 
-    Hvibci2.append( ci2_hvib )
-    ci2_hvib.real().show_matrix("%s/Hvib_ci2_%d_re" % (res_dir, int( step )))
-    ci2_hvib.imag().show_matrix("%s/Hvib_ci2_%d_im" % (res_dir, int( step )))
 
-for step in range( nsteps-1 ):
-    #Calculating SD NACs
-    sd_nacs = (  0.5j / dt ) * CMATRIX ( ( Stsd[step] - Stsd[step].H() ).real() )    
+for step in range( nsteps-1 ):   
     #Calculating CI NACs
     ci_nacs = (  0.5j / dt ) * CMATRIX ( ( Stci[step] - Stci[step].H() ).real() )    
     #Creating CI Vibrational Hamiltonian
     ci_hvib = E[step] - ci_nacs
-    #Creating SD Vibrational Hamiltonian 
-    sd_hvib = Esd[step] - sd_nacs
-    Hvibsd.append( sd_hvib )
     Hvib.append( ci_hvib )
-    sd_hvib.real().show_matrix("%s/Hvib_sd_%d_re" % (res_dir, int( step )))
-    sd_hvib.imag().show_matrix("%s/Hvib_sd_%d_im" % (res_dir, int( step )))
     ci_hvib.real().show_matrix("%s/Hvib_ci_%d_re" % (res_dir, int( step )))
     ci_hvib.imag().show_matrix("%s/Hvib_ci_%d_im" % (res_dir, int( step )))
 
-#Hvib.append( ci_hvib)    # appending the last element twice to make it nsteps
+Hvib.append( ci_hvib)    # appending the last element twice to make it nsteps
 #Hvibsd.append( sd_hvib )
 
 
@@ -365,20 +270,13 @@ for sd_index in range( nCIs ):
     CI_energy.append( [] )
     SD_energy.append( [] )
     for step in range( nsteps ):        
-        Ensd = Hvibsd[step].get( sd_index, sd_index ).real 
-        E0sd = Hvibsd[step].get( 0, 0 ).real
         En = Hvib[step].get( sd_index, sd_index ).real 
         E0 = Hvib[step].get( 0, 0 ).real
         CI_energy[ sd_index ].append( En - E0 )
-        SD_energy[ sd_index ].append( Ensd - E0sd )        
         
 CI_energy = np.array( CI_energy  )
-SD_energy = np.array( SD_energy ) 
 md_time   = np.array( md_time )
 
-# Functions to compute the time-averaged SD NACs and make a list of them
-sd_res= Mat_avg(Hvibsd)
-sd_tNACs = []
 # Functions to compute the time-averaged CI NACs and make a list of them
 ci_res = Mat_avg(Hvib)
 ci_tNACs = []
