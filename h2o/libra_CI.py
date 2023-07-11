@@ -58,7 +58,7 @@ params = {}
 if os.path.exists('*.png'):
   os.remove('*.png')
 path = os.getcwd()
-params["data_set_paths"] = [ "h2oTraj2/h2o_" ]  # where the step2 data is located
+params["data_set_paths"] = [ "h2oTraj/h2o_" ]  # where the step2 data is located
 params["file_prefix"] = "h2o_" # filename
 params["data_dim"] = 4 # the number of rows/columsn in E_ks files
 params["active_space"] = range(0,4) # alpha channel only here 
@@ -66,7 +66,7 @@ params["isnap"] = 0 # numbering of the first available file
 params["fsnap"] = final # number of the final step
 
 params["orbital_indices"]     = list( range(0,4) )    # orbital indices from waveplot
-params["logfile_directory"]   = "h2oTraj2/"
+params["logfile_directory"]   = "h2oTraj/"
 params["es_software"]         = "mopac"
 params["isUKS"]               = 0
 params["tolerance"]           = 0.0  # set this to 0.0 for cp2k
@@ -80,35 +80,35 @@ params["number_of_states"]    = 3
 # reading basis from mopac output file
 sd_basis=read_mopac_SD_config(params)
 
-# reading matrices from h2oTraj2/
+# reading matrices from h2oTraj/
 params.update( {  "data_dim":4, "isnap":start,"fsnap":final,"active_space":range(0,4),"get_imag":0,"get_real":1,
-                  "data_re_prefix": "h2oTraj2/h2o_S_", "data_re_suffix": "_re.txt",
-                  "data_im_prefix": "h2oTraj2/h2o_S_", "data_im_suffix": "_im.txt"
+                  "data_re_prefix": "h2oTraj/h2o_S_", "data_re_suffix": "_re.txt",
+                  "data_im_prefix": "h2oTraj/h2o_S_", "data_im_suffix": "_im.txt"
                })
 S = data_read.get_data(params)
 print("GOT S")
 
 params.update( {  "data_dim":4, "isnap":start,"fsnap":final,"active_space":range(0,4),"get_imag":0,"get_real":1,
-                  "data_re_prefix": "h2oTraj2/h2o_St_", "data_re_suffix": "_re.txt",
-                  "data_im_prefix": "h2oTraj2/h2o_St_", "data_im_suffix": "_im.txt"
+                  "data_re_prefix": "h2oTraj/h2o_St_", "data_re_suffix": "_re.txt",
+                  "data_im_prefix": "h2oTraj/h2o_St_", "data_im_suffix": "_im.txt"
                })
 tim_ov = data_read.get_data(params)
 print("GOT St")
 params.update( {  "data_dim":5, "isnap":start,"fsnap":final,"active_space":range(0,5),"get_imag":0,"get_real":1,
-                  "data_re_prefix": "h2oTraj2/h2o_T_", "data_re_suffix": "_re.txt",
+                  "data_re_prefix": "h2oTraj/h2o_T_", "data_re_suffix": "_re.txt",
                   #"data_im_prefix": "Tetracene_indo_traj/h2_T_", "data_im_suffix": "_im.txt"
                })
 T = data_read.get_data(params)
 print("GOT CI_matrix")
 params.update( {  "data_dim":5, "isnap":start,"fsnap":final,
-                  "data_re_prefix": "h2oTraj2/h2o_SD_mid_E_", "data_re_suffix": "_re.txt",
-                  "data_im_prefix": "h2oTraj2/h2o_SD_mid_E_", "data_im_suffix": "_im.txt"
+                  "data_re_prefix": "h2oTraj/h2o_SD_mid_E_", "data_re_suffix": "_re.txt",
+                  "data_im_prefix": "h2oTraj/h2o_SD_mid_E_", "data_im_suffix": "_im.txt"
                })
 Esd = data_read.get_data(params)
 print("GOT SD_midpoints")
 params.update( {  "data_dim":5, "isnap":start,"fsnap":final,
-                  "data_re_prefix": "h2oTraj2/h2o_CI_mid_E_", "data_re_suffix": "_re.txt",
-                  "data_im_prefix": "h2oTraj2/h2o_CI_mid_E_", "data_im_suffix": "_im.txt"
+                  "data_re_prefix": "h2oTraj/h2o_CI_mid_E_", "data_re_suffix": "_re.txt",
+                  "data_im_prefix": "h2oTraj/h2o_CI_mid_E_", "data_im_suffix": "_im.txt"
                })
 E = data_read.get_data(params)
 print("GOT CI_midpoints")
@@ -212,7 +212,7 @@ step3.apply_orthonormalization_general( Sci, Stci )
 
 dt = 1*units.fs2au
 start_time = params["isnap"]
-res_dir="h2oTraj2"
+res_dir="h2oTraj"
 nsteps = final-start
 print("Outputting the CI data to the res directory..." )
 # Printing matrices in results directory
@@ -229,9 +229,9 @@ ci_hvib = None
 sd_hvib = None
 for step in range( nsteps-1 ):
     #Calculating SD NACs
-    sd_nacs = (  0.5j / dt ) * CMATRIX ( ( Stsd[step] - Stsd[step].H() ).real() )    
+    sd_nacs = (  0.5j / dt ) * CMATRIX ( ( Stsd[step] - Stsd[step].T() ).real() )    
     #Calculating CI NACs
-    ci_nacs = (  0.5j / dt ) * CMATRIX ( ( Stci[step] - Stci[step].H() ).real() )    
+    ci_nacs = (  0.5j / dt ) * CMATRIX ( ( Stci[step] - Stci[step].T() ).real() )    
     #Creating CI Vibrational Hamiltonian
     ci_hvib = E[step] - ci_nacs
     #Creating SD Vibrational Hamiltonian 
