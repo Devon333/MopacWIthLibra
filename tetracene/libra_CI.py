@@ -240,7 +240,7 @@ for step in range(nsteps-1):
 
 
 # Make the Hvib in the many-body basis
-Hvib,Hvibsd,Hvibci2 = [], [], []
+Hvib = []
 ci_hvib = None
 
 for step in range( nsteps-1 ):   
