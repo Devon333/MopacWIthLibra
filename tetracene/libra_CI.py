@@ -167,15 +167,14 @@ Stci2=[]
 
 #building lists of overlap and time overlap matrices using function built above
 for time in range(final-start):
-    Stsd.append(SD_ovlp(basis, tim_ov[time]))#,ks_phases[time]))
-    Ssd.append(SD_ovlp(basis, S[time]))#,ks_phases[time]))
+    Stsd.append(SD_ovlp(basis, tim_ov[time]))
+    Ssd.append(SD_ovlp(basis, S[time]))
 
 print("this is Stsd ", Stsd[0].show_matrix() )    
 print("this is Ssd ", Ssd[0].show_matrix() )    
 
 #step3.apply_orthonormalization_general( Ssd, Stsd )
 sd_phases=step3.apply_phase_correction_general( Stsd )
-#print("the phases",sd_phases[0].get(1,0).real)
 
 
 SD2CI=[]
@@ -204,12 +203,6 @@ for time in range(final-start):
             norm += abs(SD2CI[time].get(row,col))**2
         norm = 1.0/math.sqrt(norm)
         SD2CI[time].scale(-1,row,norm*(1.0+0.0j))
-
-#for time in range(final-start):
-#    for row in range(CIs):
-#      for col in range(CIs):
-#          val = SD2CI[time].get(row,col)
-#          SD2CI[time].set(row,col,val)
 
 
 #calculating CI overlap and time overlaps
@@ -253,7 +246,6 @@ for step in range( nsteps-1 ):
     ci_hvib.imag().show_matrix("%s/Hvib_ci_%d_im" % (res_dir, int( step )))
 
 Hvib.append( ci_hvib)    # appending the last element twice to make it nsteps
-#Hvibsd.append( sd_hvib )
 
 
 
@@ -281,48 +273,13 @@ md_time   = np.array( md_time )
 # Functions to compute the time-averaged CI NACs and make a list of them
 ci_res = Mat_avg(Hvib)
 ci_tNACs = []
-#ci_res2 = Mat_avg(Hvibci2)
 
-#for i in range(nCIs):
-#    ci_tNACs.append( [] )
-#    sd_tNACs.append( [] )
-#    for j in range(nCIs):
-#        #ci_tNACs[i].append( ci_res.get(i,j).imag * 1000.0 / units.ev2Ha )        
-#        sd_tNACs[i].append( sd_res.get(i,j).imag * 1000.0 /units.ev2Ha  )        
-#        ci_tNACs[i].append( ci_res.get(i,j).imag * 1000.0 /units.ev2Ha  )        
-#sd_tNACs = np.array(sd_tNACs)
-#ci_tNACs = np.array(ci_tNACs)
-#
 #
 nstates = 10
 orbitals = ["GS","42 -> 43","42 -> 44","42 -> 45","41 -> 43","41 -> 44","41 -> 45","40 -> 43","40 -> 44","40 -> 45"]
 state_label = ["GS","2","3","4","5","6","7","8","9","10"]
 state_label_x =["GS","H->L","H->L+1","H->L+2","H-1->L","H-1->L+1","H-1->L+2","H-2->L","H-2->L+1","H-2->L+2"]
 
-## Figures - Time-Dependent CI Data
-#plt.figure(num=None, figsize=(6,6), dpi=100, edgecolor='black', frameon=True)
-#plt.title('INDO CI Energies', fontsize=25)
-#plt.xlabel('Time, fs')
-#plt.xticks(fontsize=15)
-#plt.yticks(fontsize=15)
-#for state in range(1,nstates ):    
-#    plt.plot(md_time, CI_energy[state], label=state_label[state], linewidth=2)
-#plt.tight_layout()
-#plt.savefig("CI_energytime.png")
-
-#fig=plt.figure(num=None, figsize=(6,6), dpi=100, edgecolor='black', frameon=True)
-#plt.title('INDO CINACs', fontsize=25)
-#ax = plt.subplot(111)
-#ax.set_xticks(np.arange(len(orbitals)))
-#ax.set_yticks(np.arange(len(orbitals)))
-#ax.set_xticklabels(state_label,fontsize=15)
-#ax.set_yticklabels(state_label,fontsize=15)
-#cb=ax.imshow(ci_res2, origin='lower', cmap='plasma', interpolation='nearest')
-#plt.xticks(rotation=90)
-#plt.colorbar(cb,label="meV")
-#
-#plt.tight_layout()
-#plt.savefig("CI2_avgNAC.png")
 
 fig=plt.figure(num=None, figsize=(6,6), dpi=100, edgecolor='black', frameon=True)
 plt.title('INDO CINACs', fontsize=25)
