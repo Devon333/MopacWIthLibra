@@ -190,9 +190,6 @@ for step in range(nsteps-1):
     Sci[step].real().show_matrix("%s/S_ci_%d_re" % (res_dir, int(step)))
     Stci[step].real().show_matrix("%s/St_ci_%d_re" % (res_dir, int(step)))
 
-for step in range(nsteps-1):
-    Ssd[step].real().show_matrix("%s/S_sd_%d_re" % (res_dir, int(step)))
-    Stsd[step].real().show_matrix("%s/St_sd_%d_re" % (res_dir, int(step)))
 
 
 # Make the Hvib in the many-body basis
