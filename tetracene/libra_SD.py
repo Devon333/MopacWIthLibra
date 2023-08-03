@@ -1,6 +1,7 @@
 import os
 import sys
 import math
+sys.path.append("../")
 from libra_mopac import *
 
 # Fisrt, we add the location of the library to test to the PYTHON path
@@ -108,42 +109,6 @@ basis= reindex_basis(raw_basis)
 
 
 
-#function that calculates overlap between Slater determinants using libra functions
-def SD_ovlp(basis, time_ov_mat):
-  """basis -> list[list]
-     time_ov_mat -> list[CMATRIX]
-     takes in list of SD basis lists (list with indexes of KS orbitals used to describe 
-     a single SD) and computes overlaps between SD bases by pulling the appropriate indices
-     from the time doverlap matrix (time_ov_mat)
-     returns a matrix with overlaps of SD overlaps """
-  N, M = len(basis), len(basis)
-  res = CMATRIX(N,M)
-  for i in range(len(basis)):
-      for j in range(len(basis)):
-         test = mapping.ovlp_arb(basis[i], basis[j], time_ov_mat,False)
-         res.set(i,j,test)
-         #print(test) 
-  return res
-
-
-def Mat_avg(cmatList):
-    """cmatList -> list[CMATRIX]
-    takes in a list of cmatrices and returns the average value of each matrix element 
-    over all of the in a numpy matrix
-    """
-    cols = cmatList[0].num_of_cols
-    matAvg = np.zeros((cols,cols))
-    steps = len(cmatList)
-    for row in range(cols): 
-        for col in range(cols):
-            sumNacs = 0
-            for time in range(steps):
-                if row != col:
-                    sumNacs += 27.2114*abs(cmatList[time].get(row,col))* 1000
-            avg = sumNacs/steps
-            print(avg)
-            matAvg[row,col]=avg
-    return matAvg
 
 
 
