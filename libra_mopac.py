@@ -3,7 +3,13 @@ from liblibra_core import *
 from libra_py.workflows.nbra import mapping, step2_many_body, step3, step4, step3_many_body
 import numpy as np
 
+
+
 def get_raw_basis(params):
+    '''
+    Main function that uses other functions to reads SD basis from 
+    mopac output file returns a list of list containing SD representations
+    '''
     output_file_name=params["logfile_directory"]+params["file_prefix"]+"0"+".out"
     output = open(output_file_name)
     min_orb=1000000
@@ -98,6 +104,9 @@ def reindex_basis(basis):
 
 
 def read_num_of_MOs_output(params):
+    '''
+    function that reads the number of MOs for output file
+    '''
     output_file_name=params["logfile_directory"]+params["file_prefix"]+"0"+".out"
     output = open(output_file_name)
     num_of_mos=0
@@ -119,6 +128,9 @@ def read_num_of_MOs_output(params):
 
 
 def read_mopac_MO_eigenvalues(params):
+    '''
+    function reads MO energies/eigenvalues and returna a list
+    '''
     output_file_name=params["logfile_directory"]+params["file_prefix"]+"0"+".out"
     output = open(output_file_name)
     num_of_mos = read_num_of_MOs_output(params)
@@ -147,6 +159,10 @@ def read_mopac_MO_eigenvalues(params):
 
 
 def read_mopac_MO_eigenvectors(params):
+    '''
+    function that reads molecular orbital vectors from mopac output file and returns 
+    a list of list containing molecular orbital vectors
+    '''
     output_file_name=params["logfile_directory"]+params["file_prefix"]+"0"+".out"
     output = open(output_file_name)
     num_of_mos = read_num_of_MOs_output(params)
@@ -188,6 +204,9 @@ def read_mopac_MO_eigenvectors(params):
 
 
 def read_mopac_num_of_SD_states(params):
+    '''
+    function reads the number of SDs from output file
+    '''
     output_file_name=params["logfile_directory"]+params["file_prefix"]+"0"+".out"
     output = open(output_file_name)
     line = output.readline()
@@ -210,6 +229,9 @@ def read_mopac_num_of_SD_states(params):
 
 
 def read_mopac_SD_energies(params):
+    '''
+    function returns a list of SD energies from mopac output file
+    '''
     output_file_name=params["logfile_directory"]+params["file_prefix"]+"0"+".out"
     output = open(output_file_name)
     line = output.readline()
@@ -240,6 +262,9 @@ def read_mopac_SD_energies(params):
 
 
 def read_mopac_SD_config(params):
+    '''
+    Function that reads in SD configurations from output fle
+    '''
     output_file_name=params["logfile_directory"]+params["file_prefix"]+"0"+".out"
     output = open(output_file_name)
     line = output.readline()
@@ -277,6 +302,9 @@ def read_mopac_SD_config(params):
 
 
 def read_mopac_CI_matrix(params):
+    '''
+    Function that reads CI matrix from mopac output
+    '''
     output_file_name=params["logfile_directory"]+params["file_prefix"]+"0"+".out"
     output = open(output_file_name)
     num_of_sd = read_mopac_num_of_SD_states(params)
@@ -309,6 +337,10 @@ def read_mopac_CI_matrix(params):
 
 
 def read_mopac_CI_energies(params):
+    '''
+    Function that reads CI energies from mopac output file
+    returns a list of CI energies
+    '''
     output_file_name=params["logfile_directory"]+params["file_prefix"]+"0"+".out"
     output = open(output_file_name)
     line = output.readline()
