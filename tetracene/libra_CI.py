@@ -136,7 +136,7 @@ for time in range(final-start):
 print("this is Stsd ", Stsd[0].show_matrix() )    
 print("this is Ssd ", Ssd[0].show_matrix() )    
 
-#step3.apply_orthonormalization_general( Ssd, Stsd )
+step3.apply_orthonormalization_general( Ssd, Stsd )
 sd_phases=step3.apply_phase_correction_general( Stsd )
 
 

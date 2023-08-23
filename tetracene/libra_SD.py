@@ -80,7 +80,7 @@ params["number_of_states"]    = 3
 
 # function that reads basis from mopac output files
 sd_basis=read_mopac_SD_config(params)
-
+print(sd_basis)
 # reading matrices from tetraceneTraj/
 params.update( {  "data_dim":6, "isnap":start,"fsnap":final,"active_space":range(0,6),"get_imag":0,"get_real":1,
                   "data_re_prefix": "tetraceneTraj/tetracene_S_", "data_re_suffix": "_re.txt",
@@ -105,11 +105,12 @@ print("GOT SD_midpoints")
 Esd[0].show_matrix()
 
 raw_basis=get_raw_basis(params)
+print(raw_basis)
 basis= reindex_basis(raw_basis)
 
+print(basis)
 
-
-
+#exit()
 
 
 
@@ -128,8 +129,8 @@ for time in range(final-start):
 print("this is Stsd ", Stsd[0].show_matrix() )    
 print("this is Ssd ", Ssd[0].show_matrix() )    
 
-step3.apply_orthonormalization_general( Ssd, Stsd )
-sd_phases=step3.apply_phase_correction_general( Stsd )
+#step3.apply_orthonormalization_general( Ssd, Stsd )
+#sd_phases=step3.apply_phase_correction_general( Stsd )
 #print("the phases",sd_phases[0].get(1,0).real)
 
 
