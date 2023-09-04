@@ -153,16 +153,17 @@ for time in range(final-start):
     for row in range(CIs):
         for col in range(CIs):
             val= (T[time].get(row,col))
-            print(f"val before phase corr {val}")
-            val *= sd_phases[time].get(row,0).real
+            print(f"{row},{col}:val before phase corr {val}")
+            val *= sd_phases[time].get(col,0).real
             SD2CI[time].set(row,col,val)
-            print(f'this is a value put in the SD2CI matrix {val}')
+            print(f'{row},{col}:this is a value put in the SD2CI matrix {val}')
     
 
 # normalizing rows of Transformation matrix
     for row in range(CIs):
         norm=0.0
         for col in range(CIs):
+            print(f"{row},{col}:{SD2CI[time].get(row,col)}")
             norm += abs(SD2CI[time].get(row,col))**2
         norm = 1.0/math.sqrt(norm)
         SD2CI[time].scale(-1,row,norm*(1.0+0.0j))

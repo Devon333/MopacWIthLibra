@@ -115,8 +115,8 @@ print(basis)
 
 
 #applying phase corrections to Kohn-Sham orbitals using libra functions
-step3.apply_orthonormalization_general(S, tim_ov)
-ks_phases=step3.apply_phase_correction_general(tim_ov)
+#step3.apply_orthonormalization_general(S, tim_ov)
+#ks_phases=step3.apply_phase_correction_general(tim_ov)
 
 Stsd=[]
 Ssd=[]
