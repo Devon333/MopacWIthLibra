@@ -1,6 +1,7 @@
 import os
 import sys
 import math
+sys.path.append("../")
 from libra_mopac import *
 
 # Fisrt, we add the location of the library to test to the PYTHON path
@@ -116,44 +117,6 @@ basis= reindex_basis(raw_basis)
 
 
 
-#function that calculates overlap between Slater determinants using libra functions
-def SD_ovlp(basis, time_ov_mat):
-  """basis -> list[list]
-     time_ov_mat -> list[CMATRIX]
-     takes in list of SD basis lists (list with indexes of KS orbitals used to describe 
-     a single SD) and computes overlaps between SD bases by pulling the appropriate indices
-     from the time doverlap matrix (time_ov_mat)
-     returns a matrix with overlaps of SD overlaps
-  """
-  N, M = len(basis), len(basis)
-  res = CMATRIX(N,M)
-  for i in range(len(basis)):
-      for j in range(len(basis)):
-         test = mapping.ovlp_arb(basis[i], basis[j], time_ov_mat,False)
-         #test *= phases.get(j,0).real
-         res.set(i,j,test)
-         #print(test) 
-  return res
-
-
-def Mat_avg(cmatList):
-    """cmatList -> list[CMATRIX]
-    takes in a list of cmatrices and returns the average value of each matrix element 
-    over all of the in a numpy matrix
-    """
-    cols = cmatList[0].num_of_cols
-    matAvg = np.zeros((cols,cols))
-    steps = len(cmatList)
-    for row in range(cols): 
-        for col in range(cols):
-            sumNacs = 0
-            for time in range(steps):
-                if row != col:
-                    sumNacs += 27.2114*abs(cmatList[time].get(row,col))* 1000
-            avg = sumNacs/steps
-            print(avg)
-            matAvg[row,col]=avg
-    return matAvg
 
 
 
@@ -173,7 +136,7 @@ for time in range(final-start):
 print("this is Stsd ", Stsd[0].show_matrix() )    
 print("this is Ssd ", Ssd[0].show_matrix() )    
 
-#step3.apply_orthonormalization_general( Ssd, Stsd )
+step3.apply_orthonormalization_general( Ssd, Stsd )
 sd_phases=step3.apply_phase_correction_general( Stsd )
 
 
@@ -183,23 +146,23 @@ T_co=[]
 CIs=len(basis)
 #print(f"length of CI basis {CIs}")
 
-
 # Building Transformation/CI matrix SD2CI
 for time in range(final-start):
     SD2CI.append(CMATRIX(CIs,CIs))
     for row in range(CIs):
         for col in range(CIs):
             val= (T[time].get(row,col))
-            print(f"val before phase corr {val}")
-            val *= sd_phases[time].get(row,0).real
+            #print(f"{row},{col}:val before phase corr {val}")
+            val *= sd_phases[time].get(col,0).real
             SD2CI[time].set(row,col,val)
-            print(f'this is a value put in the SD2CI matrix {val}')
-    
+            #print(f'{row},{col}:this is a value put in the SD2CI matrix {val}')
+    SD2CI[time]=SD2CI[time].T()
 
 # normalizing rows of Transformation matrix
     for row in range(CIs):
         norm=0.0
         for col in range(CIs):
+            #print(f"{row},{col}:{SD2CI[time].get(row,col)}")
             norm += abs(SD2CI[time].get(row,col))**2
         norm = 1.0/math.sqrt(norm)
         SD2CI[time].scale(-1,row,norm*(1.0+0.0j))
@@ -208,13 +171,16 @@ for time in range(final-start):
 #calculating CI overlap and time overlaps
 for time in range(len(Ssd)-1):
     Stci.append( SD2CI[time].H() * Stsd[time] * SD2CI[time+1])    
-print(f'Stci[0] {Stci[0].real().show_matrix()}')
-
+print(f'Stci[1] {Stci[1].real().show_matrix()}')
+print(f'SD2CI[1] {SD2CI[1].real().show_matrix()}')
+print(f'Stsd[1] {Stsd[1].real().show_matrix()}')
+print(f'SD2CI[2] {SD2CI[2].real().show_matrix()}')
 
 
 for time in range(len(Ssd)):
     Sci.append( SD2CI[time].H() * Ssd[time] * SD2CI[time])    
 
+#step3.apply_phase_correction_general( Stci )
 
 
 dt = 1*units.fs2au
@@ -226,7 +192,7 @@ print("Outputting the CI data to the res directory..." )
 for step in range(nsteps-1):
     Sci[step].real().show_matrix("%s/S_ci_%d_re" % (res_dir, int(step)))
     Stci[step].real().show_matrix("%s/St_ci_%d_re" % (res_dir, int(step)))
-
+    SD2CI[step].real().show_matrix("%s/SD2CI_%d_re" % (res_dir, int(step)))
 
 
 # Make the Hvib in the many-body basis

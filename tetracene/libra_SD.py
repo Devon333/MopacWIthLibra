@@ -1,6 +1,7 @@
 import os
 import sys
 import math
+sys.path.append("../")
 from libra_mopac import *
 
 # Fisrt, we add the location of the library to test to the PYTHON path
@@ -79,7 +80,7 @@ params["number_of_states"]    = 3
 
 # function that reads basis from mopac output files
 sd_basis=read_mopac_SD_config(params)
-
+print(sd_basis)
 # reading matrices from tetraceneTraj/
 params.update( {  "data_dim":6, "isnap":start,"fsnap":final,"active_space":range(0,6),"get_imag":0,"get_real":1,
                   "data_re_prefix": "tetraceneTraj/tetracene_S_", "data_re_suffix": "_re.txt",
@@ -104,53 +105,18 @@ print("GOT SD_midpoints")
 Esd[0].show_matrix()
 
 raw_basis=get_raw_basis(params)
+print(raw_basis)
 basis= reindex_basis(raw_basis)
 
+print(basis)
 
-
-#function that calculates overlap between Slater determinants using libra functions
-def SD_ovlp(basis, time_ov_mat):
-  """basis -> list[list]
-     time_ov_mat -> list[CMATRIX]
-     takes in list of SD basis lists (list with indexes of KS orbitals used to describe 
-     a single SD) and computes overlaps between SD bases by pulling the appropriate indices
-     from the time doverlap matrix (time_ov_mat)
-     returns a matrix with overlaps of SD overlaps """
-  N, M = len(basis), len(basis)
-  res = CMATRIX(N,M)
-  for i in range(len(basis)):
-      for j in range(len(basis)):
-         test = mapping.ovlp_arb(basis[i], basis[j], time_ov_mat,False)
-         res.set(i,j,test)
-         #print(test) 
-  return res
-
-
-def Mat_avg(cmatList):
-    """cmatList -> list[CMATRIX]
-    takes in a list of cmatrices and returns the average value of each matrix element 
-    over all of the in a numpy matrix
-    """
-    cols = cmatList[0].num_of_cols
-    matAvg = np.zeros((cols,cols))
-    steps = len(cmatList)
-    for row in range(cols): 
-        for col in range(cols):
-            sumNacs = 0
-            for time in range(steps):
-                if row != col:
-                    sumNacs += 27.2114*abs(cmatList[time].get(row,col))* 1000
-            avg = sumNacs/steps
-            print(avg)
-            matAvg[row,col]=avg
-    return matAvg
-
+#exit()
 
 
 
 #applying phase corrections to Kohn-Sham orbitals using libra functions
-step3.apply_orthonormalization_general(S, tim_ov)
-ks_phases=step3.apply_phase_correction_general(tim_ov)
+#step3.apply_orthonormalization_general(S, tim_ov)
+#ks_phases=step3.apply_phase_correction_general(tim_ov)
 
 Stsd=[]
 Ssd=[]
@@ -163,8 +129,8 @@ for time in range(final-start):
 print("this is Stsd ", Stsd[0].show_matrix() )    
 print("this is Ssd ", Ssd[0].show_matrix() )    
 
-step3.apply_orthonormalization_general( Ssd, Stsd )
-sd_phases=step3.apply_phase_correction_general( Stsd )
+#step3.apply_orthonormalization_general( Ssd, Stsd )
+#sd_phases=step3.apply_phase_correction_general( Stsd )
 #print("the phases",sd_phases[0].get(1,0).real)
 
 
