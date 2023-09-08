@@ -146,24 +146,23 @@ T_co=[]
 CIs=len(basis)
 #print(f"length of CI basis {CIs}")
 
-
 # Building Transformation/CI matrix SD2CI
 for time in range(final-start):
     SD2CI.append(CMATRIX(CIs,CIs))
     for row in range(CIs):
         for col in range(CIs):
             val= (T[time].get(row,col))
-            print(f"{row},{col}:val before phase corr {val}")
+            #print(f"{row},{col}:val before phase corr {val}")
             val *= sd_phases[time].get(col,0).real
             SD2CI[time].set(row,col,val)
-            print(f'{row},{col}:this is a value put in the SD2CI matrix {val}')
-    
+            #print(f'{row},{col}:this is a value put in the SD2CI matrix {val}')
+    SD2CI[time]=SD2CI[time].T()
 
 # normalizing rows of Transformation matrix
     for row in range(CIs):
         norm=0.0
         for col in range(CIs):
-            print(f"{row},{col}:{SD2CI[time].get(row,col)}")
+            #print(f"{row},{col}:{SD2CI[time].get(row,col)}")
             norm += abs(SD2CI[time].get(row,col))**2
         norm = 1.0/math.sqrt(norm)
         SD2CI[time].scale(-1,row,norm*(1.0+0.0j))
@@ -172,13 +171,16 @@ for time in range(final-start):
 #calculating CI overlap and time overlaps
 for time in range(len(Ssd)-1):
     Stci.append( SD2CI[time].H() * Stsd[time] * SD2CI[time+1])    
-print(f'Stci[0] {Stci[0].real().show_matrix()}')
-
+print(f'Stci[1] {Stci[1].real().show_matrix()}')
+print(f'SD2CI[1] {SD2CI[1].real().show_matrix()}')
+print(f'Stsd[1] {Stsd[1].real().show_matrix()}')
+print(f'SD2CI[2] {SD2CI[2].real().show_matrix()}')
 
 
 for time in range(len(Ssd)):
     Sci.append( SD2CI[time].H() * Ssd[time] * SD2CI[time])    
 
+#step3.apply_phase_correction_general( Stci )
 
 
 dt = 1*units.fs2au
@@ -190,7 +192,7 @@ print("Outputting the CI data to the res directory..." )
 for step in range(nsteps-1):
     Sci[step].real().show_matrix("%s/S_ci_%d_re" % (res_dir, int(step)))
     Stci[step].real().show_matrix("%s/St_ci_%d_re" % (res_dir, int(step)))
-
+    SD2CI[step].real().show_matrix("%s/SD2CI_%d_re" % (res_dir, int(step)))
 
 
 # Make the Hvib in the many-body basis
