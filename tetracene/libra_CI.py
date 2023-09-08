@@ -171,10 +171,10 @@ for time in range(final-start):
 #calculating CI overlap and time overlaps
 for time in range(len(Ssd)-1):
     Stci.append( SD2CI[time].H() * Stsd[time] * SD2CI[time+1])    
-print(f'Stci[1] {Stci[1].real().show_matrix()}')
-print(f'SD2CI[1] {SD2CI[1].real().show_matrix()}')
-print(f'Stsd[1] {Stsd[1].real().show_matrix()}')
-print(f'SD2CI[2] {SD2CI[2].real().show_matrix()}')
+#print(f'Stci[1] {Stci[1].real().show_matrix()}')
+#print(f'SD2CI[1] {SD2CI[1].real().show_matrix()}')
+#print(f'Stsd[1] {Stsd[1].real().show_matrix()}')
+#print(f'SD2CI[2] {SD2CI[2].real().show_matrix()}')
 
 
 for time in range(len(Ssd)):
