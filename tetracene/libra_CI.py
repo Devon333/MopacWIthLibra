@@ -137,7 +137,7 @@ print("this is Stsd ", Stsd[0].show_matrix() )
 print("this is Ssd ", Ssd[0].show_matrix() )    
 
 step3.apply_orthonormalization_general( Ssd, Stsd )
-sd_phases=step3.apply_phase_correction_general( Stsd )
+#sd_phases=step3.apply_phase_correction_general( Stsd )
 
 
 SD2CI=[]
@@ -153,7 +153,7 @@ for time in range(final-start):
         for col in range(CIs):
             val= (T[time].get(row,col))
             #print(f"{row},{col}:val before phase corr {val}")
-            val *= sd_phases[time].get(col,0).real
+            #val *= sd_phases[time].get(col,0).real
             SD2CI[time].set(row,col,val)
             #print(f'{row},{col}:this is a value put in the SD2CI matrix {val}')
     SD2CI[time]=SD2CI[time].T()
@@ -180,7 +180,7 @@ for time in range(len(Ssd)-1):
 for time in range(len(Ssd)):
     Sci.append( SD2CI[time].H() * Ssd[time] * SD2CI[time])    
 
-#step3.apply_phase_correction_general( Stci )
+step3.apply_phase_correction_general( Stci )
 
 
 dt = 1*units.fs2au
